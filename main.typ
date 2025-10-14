@@ -21,44 +21,54 @@
 = Introduction
 This homework documents how different LLMs handled two programming tasks that I previously explored in
 conversation with ChatGPT: fitting a linear regression line to log-scaled price data in Pine Script and
-animating a Perlin-noise sphere inside the official Three.js Editor. I followed the same experimental
-procedure that produced the accompanying video and screenshots, highlighting both prompt-engineering
-lessons and implementation hurdles introduced by API changes.
+animating a Perlin-noise sphere inside the official Three.js Editor. The report gives a complete account
+of the prompts, the revisions triggered by model failures, and the diagnostic reasoning that isolated API
+and lifecycle regressions. The goal is to provide a reproducible record that future students can consult
+when assessing whether LLM assistance is reliable for creative coding assignments.
+
+= Methodology
+The evaluation focused on instruction-following behaviour rather than raw creativity. For each task I
+constructed a carefully scoped prompt that mirrored earlier human-to-human discussions and then queried
+multiple publicly available LLM checkpoints. Outputs were captured verbatim and validated manually inside
+the relevant runtime (TradingView for Pine Script; Three.js Editor r180 for the graphics task). When a
+model failed, I iteratively refined the prompt while keeping track of which requirement appeared to be
+misinterpreted. No post-generation editing was applied to the model code—instead, the analysis concentrates
+on why the generated scripts did or did not execute as expected.
 
 = Task 1: Pine Script Linear Regression on Log Data
 
 The first prompt asked an LLM to recall and formalize an earlier discussion about regressing log-scaled
 price series with Pine Script v5. The exact prompt is archived below.
 
-#listing(language: "text")[
+```text
 You are an expert quantitative developer and Pine Script programmer.
 
-I want to create a TradingView indicator that draws a *linear regression line on log-scaled price data*.
+I want to create a TradingView indicator that draws a linear regression line on log-scaled price data.
 
 Specifically:
 
 1. The chart is in log scale (base-10).
 2. The indicator should approximate price movement with a best-fit line of the form
-   ( y = k \cdot \log_{10}(x) + d )
-   where (x) is the bar index and (y) the log-scaled price.
+   y = k * log10(x) + d
+   where x is the bar index and y the log-scaled price.
 3. The goal is to minimize the squared error between the log of the actual price and the fitted line.
 4. The indicator must work in Pine Script v5 and handle typical pitfalls like:
-
-   * `na` initialization issues
-   * `request.security()` and `ta.linreg()` scope limitations
-   * Ensuring `plot()` works correctly even on log charts
+   - na initialization issues.
+   - request.security() and ta.linreg() scope limitations.
+   - Ensuring plot() works correctly even on log charts.
 5. Output should include:
-
-   * A clearly explained formula for computing (k) and (d)
-   * A working Pine Script code example
-   * A short explanation of how to interpret the regression visually on a log chart
+   - A clearly explained formula for computing k and d.
+   - A working Pine Script code example.
+   - A short explanation of how to interpret the regression visually on a log chart.
 
 Please reason step-by-step and explain the math, code, and any trade-offs (e.g., performance or visual accuracy).
-]
+```
 
 Every tested model produced syntactically invalid Pine Script or misapplied the logarithmic transform,
 suggesting that the language’s edge cases and strict typing still require hands-on expertise rather than
-pure LLM synthesis.
+pure LLM synthesis. Typical errors included calling log10 on price values without first mapping the bar
+index, using the removed security() keyword, and returning tuples where Pine Script expects series<float>.
+No model supplied the analytical derivation of the regression coefficients, even when explicitly requested.
 
 = Task 2: Perlin Noise Sphere in the Three.js Editor
 
@@ -66,17 +76,30 @@ The second task challenged the models to animate a sphere with Perlin noise enti
 Editor. A seemingly minor runtime change between r157 and r158 invalidated legacy advice that relied on
 `this.update()`, so I crafted an updated prompt explicitly mentioning the new `onBeforeRender` hook.
 
-#listing(language: "text")[
+```text
 You are a senior creative-coding and 3D-graphics expert.
 I am using the official Three.js Editor (version r180 or newer) from https://threejs.org/editor/.
 
 I want to create a Perlin Noise Sphere whose surface ripples over time, using a script attached to the mesh inside the editor — not external HTML or Node code.
 
-[Requirements omitted here for brevity—see conversation transcript.]
-]
+Requirements:
+
+1. The solution must work inside the Three.js Editor version r180 or newer. The editor no longer invokes
+   this.update(), so the animation needs to hook into this.onBeforeRender() or an equivalent lifecycle call.
+2. The sphere surface should be displaced by Perlin or value noise over time by directly modifying the
+   vertex positions of SphereGeometry.
+3. The script must be pasted directly into the editor’s Script panel, expose tweakable parameters
+   (amplitude, frequency, speed), and avoid external imports.
+4. Provide short explanations for how the noise is applied, why onBeforeRender() is required, and how to
+   adjust the parameters for subtle or exaggerated motion.
+5. Optional: color modulation based on the noise intensity is welcome if it helps illustrate the effect.
+```
 
 This clarification made the difference: only models that understood the lifecycle change produced motion.
-The gallery below shows representative outputs.
+Initial prompts that referenced the deprecated update() hook yielded static meshes. After rewriting the
+instructions to emphasise onBeforeRender(), the best-performing model cached the original vertex positions,
+computed normals per frame, and produced the animated ripple captured in gpt.webm. The gallery below shows
+representative outputs.
 
 #figure(
   image("others.png", width: 70%),
@@ -85,7 +108,7 @@ The gallery below shows representative outputs.
 
 #figure(
   image("glm.png", width: 70%),
-  caption: [GLM-4.5-Air-Q8\_0 retained colouring but remained static in the editor.]
+  caption: [GLM-4.5-Air-Q8_0 retained colouring but remained static in the editor.]
 )
 
 #figure(
@@ -95,10 +118,33 @@ The gallery below shows representative outputs.
 
 == Model Outcomes
 
-- Gemma family models never connected the revised lifecycle hook, so no animation occurred despite correct noise scaffolding.
-- The 27B model displaced vertices only along the Y axis and reused mutated positions, so the mesh collapsed instead of producing radial ripples (Appendix A).
-- GLM-4.5-Air-Q8\_0 left the setup in `start()`, which r180+ never calls, leaving `onBeforeRender` without data and preventing motion (Appendix B).
-- gpt-oss-120b-F16 generated a full Perlin implementation with cached base geometry and dynamic normals, matching the intended demo recording.
+- Gemma family checkpoints never latched onto the revised lifecycle hook; they repeated advice about init
+  and update yet failed to bind those callbacks, which results in zero animation even when noise expressions
+  are defined.
+- The 27B model displaced vertices only along the Y axis and reused mutated positions, causing a cumulative
+  drift that collapses the mesh instead of producing radial ripples (Appendix A). The script never recomputes
+  normals or restores the original geometry state.
+- GLM-4.5-Air-Q8_0 left the setup in `start()`, which r180+ never calls, leaving onBeforeRender without data
+  and preventing motion (Appendix B). The noise function itself is coherent, but the lifecycle mismatch
+  suppresses any visible effect.
+- gpt-oss-120b-F16 generated a full Perlin implementation with cached base geometry, deterministic gradient
+  tables, and optional vertex-colour modulation, matching the intended demo recording in gpt.webm.
+
+= Discussion
+The experiments underline how brittle LLM-generated code remains when platforms evolve faster than publicly
+available documentation. Pine Script’s strict series typing and TradingView’s log chart heuristics confused
+every model despite explicit instructions, indicating that niche DSLs still need expert review. In contrast,
+the Three.js assignment became solvable once the prompt documented the precise API change, suggesting that
+LLMs can adapt when the requirements capture the runtime constraints unambiguously. Future work should
+include automated validation harnesses that feed model outputs directly into the editor to quantify success
+rates rather than relying on manual inspection.
+
+= Conclusion
+Across both tasks, LLM assistance accelerated ideation but fell short of delivering production-ready code
+without human verification. The negative results for Pine Script reveal current limitations around numerical
+reasoning in domain-specific languages, whereas the positive Three.js outcome shows that targeted prompt
+engineering can still unlock compelling results. The appendices preserve the analysed scripts so readers can
+reproduce the evaluation and probe the failure modes themselves.
 
 // Create appendix section
 #show: arkheion-appendices
