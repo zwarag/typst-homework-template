@@ -33,7 +33,8 @@ multiple publicly available LLM checkpoints. Outputs were captured verbatim and 
 the relevant runtime (TradingView for Pine Script; Three.js Editor r180 for the graphics task). When a
 model failed, I iteratively refined the prompt while keeping track of which requirement appeared to be
 misinterpreted. No post-generation editing was applied to the model code—instead, the analysis concentrates
-on why the generated scripts did or did not execute as expected.
+on why the generated scripts did or did not execute as expected. This mirrors prior empirical evaluations of
+LLM code generation that emphasise systematic task design and manual inspection of failure cases #cite(chen2021codex, liu2024classeval).
 
 = Task 1: Pine Script Linear Regression on Log Data
 
@@ -69,12 +70,15 @@ suggesting that the language’s edge cases and strict typing still require hand
 pure LLM synthesis. Typical errors included calling log10 on price values without first mapping the bar
 index, using the removed security() keyword, and returning tuples where Pine Script expects series<float>.
 No model supplied the analytical derivation of the regression coefficients, even when explicitly requested.
+Manual Pine Script examples that target logarithmic displays exist in the TradingView library, indicating
+that the workflow is feasible but still under-documented #cite(tradingview_log_regression).
 
 = Task 2: Perlin Noise Sphere in the Three.js Editor
 
 The second task challenged the models to animate a sphere with Perlin noise entirely inside the Three.js
 Editor. A seemingly minor runtime change between r157 and r158 invalidated legacy advice that relied on
-`this.update()`, so I crafted an updated prompt explicitly mentioning the new `onBeforeRender` hook.
+`this.update()`, so I crafted an updated prompt explicitly mentioning the new `onBeforeRender` hook that the
+r180 migration notes highlight for editor scripts #cite(threejs_r180).
 
 ```text
 You are a senior creative-coding and 3D-graphics expert.
@@ -87,7 +91,7 @@ Requirements:
 1. The solution must work inside the Three.js Editor version r180 or newer. The editor no longer invokes
    this.update(), so the animation needs to hook into this.onBeforeRender() or an equivalent lifecycle call.
 2. The sphere surface should be displaced by Perlin or value noise over time by directly modifying the
-   vertex positions of SphereGeometry.
+   vertex positions of SphereGeometry, following the improved noise formulation by Perlin #cite(perlin2002improving).
 3. The script must be pasted directly into the editor’s Script panel, expose tweakable parameters
    (amplitude, frequency, speed), and avoid external imports.
 4. Provide short explanations for how the noise is applied, why onBeforeRender() is required, and how to
@@ -98,7 +102,7 @@ Requirements:
 This clarification made the difference: only models that understood the lifecycle change produced motion.
 Initial prompts that referenced the deprecated update() hook yielded static meshes. After rewriting the
 instructions to emphasise onBeforeRender(), the best-performing model cached the original vertex positions,
-computed normals per frame, and produced the animated ripple captured in gpt.webm. The gallery below shows
+computed normals per frame, and produced the animated ripple captured in gpt.mp4. The gallery below shows
 representative outputs.
 
 #figure(
@@ -112,7 +116,7 @@ representative outputs.
 )
 
 #figure(
-  block(link("gpt.webm", "Watch the working ripple animation (gpt.webm)")),
+  block(link("gpt.mp4", "Watch the working ripple animation (gpt.mp4)")),
   caption: [gpt-oss-120b-F16 achieved the full Perlin-style displacement in the editor.]
 )
 
@@ -128,7 +132,7 @@ representative outputs.
   and preventing motion (Appendix B). The noise function itself is coherent, but the lifecycle mismatch
   suppresses any visible effect.
 - gpt-oss-120b-F16 generated a full Perlin implementation with cached base geometry, deterministic gradient
-  tables, and optional vertex-colour modulation, matching the intended demo recording in gpt.webm.
+  tables, and optional vertex-colour modulation, matching the intended demo recording in gpt.mp4.
 
 = Discussion
 The experiments underline how brittle LLM-generated code remains when platforms evolve faster than publicly
@@ -145,6 +149,8 @@ without human verification. The negative results for Pine Script reveal current 
 reasoning in domain-specific languages, whereas the positive Three.js outcome shows that targeted prompt
 engineering can still unlock compelling results. The appendices preserve the analysed scripts so readers can
 reproduce the evaluation and probe the failure modes themselves.
+
+#bibliography("bibliography.bib")
 
 // Create appendix section
 #show: arkheion-appendices
