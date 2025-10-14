@@ -11,6 +11,8 @@
   keywords: ("keyword1", "keyword2"),
   date: "2025-10-07",
 )
+
+Disclosure: I used generative artificial intelligence tools to proof-read and polish this paper; all research and conclusions are my own.
 #set cite(style: "american-psychological-association")
 #show link: underline
 
@@ -133,4 +135,3 @@ Single citation @Vaswani2017AttentionIA. Multiple citations @Vaswani2017Attentio
 == Appendix section
 
 #lorem(100)
-
