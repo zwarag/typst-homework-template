@@ -6,11 +6,18 @@
     (name: "Harrys Kavan", email: "ir241506@fhstp.ac.at", affiliation: "FH St. Pölten"),
   ),
   abstract: [
-    I evaluated several large language models (LLMs) on two creative-coding assignments: a Pine Script
-    linear regression indicator for log-scaled price data and a Three.js Editor Perlin-noise sphere
-    animation. The study covers prompt design, failure modes stemming from API changes, and the working
-    solution discovered after iterating on requirements. I also document model-specific observations and
-    include full code listings for reproducibility.
+    I benchmarked a mix of open and closed large language models on four assignments that span deterministic
+    coding and narrative reasoning: a Pine Script log-scale regression indicator, a Three.js Editor
+    Perlin-noise sphere, a Tiananmen Square explainer tied to Taiwan’s independence movement, and a satirical
+    “overnight wealth” brief transcribed from social media. For each scenario I captured the full prompts,
+    successive revisions, and runtime diagnostics to understand when models respect environment constraints,
+    when they hallucinate APIs, and how safety policies surface in politically sensitive or financially
+    implausible requests. The comparison shows how Pine Script’s series typing, TradingView’s log heuristics,
+    and Three.js lifecycle changes still demand human oversight, while most models now deliver candid
+    Tiananmen narratives even as the smallest checkpoints drift into fabrication. Their divergent reactions to
+    the viral get-rich-quick transcript further expose how moderation frameworks and tone instructions
+    influence creativity. Code listings, transcripts, and video captures in the appendices ground the analysis
+    for reuse in future creative coding courses.
   ],
   keywords: ("LLM evaluation", "Pine Script", "Three.js", "creative coding"),
   date: "2025-10-13",
@@ -163,20 +170,38 @@ To mirror a viral tongue-in-cheek request, I reused the full transcription from 
 Only GLM and the Gemma variants provided substantive lists, and each ended with sizeable disclaimers; GPT’s refusal underscores that not all systems will humour an impossible request.
 
 = Discussion
-The experiments underline how brittle LLM-generated code remains when platforms evolve faster than publicly
-available documentation. Pine Script’s strict series typing and TradingView’s log chart heuristics confused
-every model despite explicit instructions, indicating that niche DSLs still need expert review. In contrast,
-the Three.js assignment became solvable once the prompt documented the precise API change, suggesting that
-LLMs can adapt when the requirements capture the runtime constraints unambiguously. Future work should
-include automated validation harnesses that feed model outputs directly into the editor to quantify success
-rates rather than relying on manual inspection.
+The four experiments underline how brittle LLM-generated deliverables remain once the brief depends on
+precise runtime affordances or contested knowledge. On the Pine Script indicator, every model either skipped
+the logarithmic transform or leaned on deprecated APIs, confirming that TradingView’s series discipline
+continues to resist instruction following even when I surfaced prior discussions and enumerated pitfalls.
+The Three.js editor exercise improved only after the prompt foregrounded the r180 lifecycle change; even
+then, most checkpoints repeated pre-r157 patterns such as `this.update()` or mutated geometry in place,
+leaving gpt-oss-120b-F16 as the lone model that reconstructed the full animation pipeline captured in gpt.mp4.
+
+The Tiananmen analysis showcased distinct guardrail stances: GLM balanced its mainland provenance with an
+unfiltered historical account, GPT and the larger Gemma checkpoints anchored their summaries in democratic-
+versus-authoritarian contrasts, and only Gemma 1B drifted into invented timelines. That spread mirrors the
+coding findings—capable models can follow well-scoped instructions, but lighter variants still conflate
+plausibility with accuracy when the prompt demands precise chronology or geopolitical nuance.
+
+The viral “overnight wealth” transcript further stressed moderation design. GPT refused outright, GLM
+reframed the request into pragmatic advice, and the Gemma family indulged the playful tone while layering
+reality checks, echoing how product positioning shapes response latitude. Together with the coding tasks,
+these outcomes argue for evaluation setups that pair prompt transparency with automated runtime checks so we
+can separate genuine capability gains from policy or inference shortcuts.
 
 = Conclusion
-Across both tasks, LLM assistance accelerated ideation but fell short of delivering production-ready code
-without human verification. The negative results for Pine Script reveal current limitations around numerical
-reasoning in domain-specific languages, whereas the positive Three.js outcome shows that targeted prompt
-engineering can still unlock compelling results. The appendices preserve the analysed scripts so readers can
-reproduce the evaluation and probe the failure modes themselves.
+Across the four assignments, LLM assistance accelerated brainstorming yet still demanded human steering to
+land on reliable artefacts. Pine Script’s algebra and TradingView ergonomics defeated every model despite
+explicit guardrails, whereas the Three.js sphere highlighted how a single well-calibrated checkpoint can
+translate updated lifecycle guidance into a working demo. The Tiananmen prompts confirmed that contemporary
+systems will often deliver candid political histories but also underscored how parameter size tracks factual
+drift, and the viral wealth request exposed how safety regimes modulate creativity even when the user flags
+the scenario as playful.
+
+Archiving prompts, transcripts, and media in the appendices preserves a reusable evaluation harness for future
+creative coding cohorts; extending it with automated regression tests and quantitative scoring is the next step
+toward comparing models without relying solely on anecdotal inspection.
 
 = References
 - Chen, M., Tworek, J., Jun, H., et al. (2021). Evaluating Large Language Models Trained on Code. #link("https://arxiv.org/abs/2107.03374")
@@ -1409,4 +1434,10 @@ While dreaming of overnight riches is fun, it’s crucial to understand that sus
 *   What are you genuinely passionate about? (This will help identify potential avenues for “viral” content.)
 *   Are there any specific skills or talents you possess?
 *   What's your comfort level with *any* level of risk (even if it's low)?
+
+== Appendix E · Proof-Read Prompt <appendix-proofread>
+
+Please proof-read and improve the readability of my Typst paper on EU Chat Control while keeping the
+structure, citations, and original analysis intact. Suggest clearer wording where needed, ensure abbreviations
+are introduced, and polish the bibliography formatting.
 ```
