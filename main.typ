@@ -101,7 +101,7 @@ Requirements:
 This clarification made the difference: only models that understood the lifecycle change produced motion.
 Initial prompts that referenced the deprecated update() hook yielded static meshes. After rewriting the
 instructions to emphasise onBeforeRender(), the best-performing model cached the original vertex positions,
-computed normals per frame, and produced the animated ripple captured in gpt.mp4. The gallery below shows
+computed normals per frame, and produced the animated ripple shown in #link("https://dulcet-beignet-ef2862.netlify.app/", "the Netlify demo"). The gallery below shows
 representative outputs.
 
 #figure(
@@ -115,7 +115,7 @@ representative outputs.
 )
 
 #figure(
-  block(link("gpt.mp4", "Watch the working ripple animation (gpt.mp4)")),
+  block(link("https://dulcet-beignet-ef2862.netlify.app/", "Open the interactive ripple demo")),
   caption: [gpt-oss-120b-F16 achieved the full Perlin-style displacement in the editor.]
 )
 
