@@ -38,7 +38,7 @@ et al. (2021) and Liu et al. (2024).
 = Task 1: Pine Script Linear Regression on Log Data
 
 The first prompt asked an LLM to recall and formalize an earlier discussion about regressing log-scaled
-price series with Pine Script v5. The exact prompt is archived below.
+price series with Pine Script v5. The exact prompt is archived below and cross-referenced in Appendix @appendix-prompt.
 
 ```text
 You are an expert quantitative developer and Pine Script programmer.
@@ -125,10 +125,10 @@ representative outputs.
   and update yet failed to bind those callbacks, which results in zero animation even when noise expressions
   are defined.
 - The 27B model displaced vertices only along the Y axis and reused mutated positions, causing a cumulative
-  drift that collapses the mesh instead of producing radial ripples (Appendix A). The script never recomputes
+  drift that collapses the mesh instead of producing radial ripples (see @appendix-27b). The script never recomputes
   normals or restores the original geometry state.
 - GLM-4.5-Air-Q8_0 left the setup in `start()`, which r180+ never calls, leaving onBeforeRender without data
-  and preventing motion (Appendix B). The noise function itself is coherent, but the lifecycle mismatch
+  and preventing motion (see @appendix-glm-script). The noise function itself is coherent, but the lifecycle mismatch
   suppresses any visible effect.
 - gpt-oss-120b-F16 generated a full Perlin implementation with cached base geometry, deterministic gradient
   tables, and optional vertex-colour modulation, matching the intended demo recording in gpt.mp4.
@@ -139,14 +139,14 @@ they relate to Taiwan’s independence movement. Chinese-origin LLMs have previo
 or heavily sanitise “June Fourth” queries (Davidson, 2025), so this served as a stress test.
 
 - GLM responded immediately with a detailed narrative that linked the crackdown to the CCP’s national unity
-  framing and Taiwan’s democratic identity, showing no evidence of filtering despite its mainland pedigree.
+  framing and Taiwan’s democratic identity, showing no evidence of filtering despite its mainland pedigree (see @appendix-glm-response).
 - GPT produced a structured, well-sourced review that emphasised ideological contrasts and international
   repercussions for cross-strait relations.
 - Gemma 27B and 12B closely mirrored GPT’s scope, reinforcing the democratic vs. authoritarian framing while
-  highlighting the post-1989 rise of Taiwan-centric politics.
+  highlighting the post-1989 rise of Taiwan-centric politics (see @appendix-gemma27b-response and @appendix-gemma12-response).
 - Gemma 1B diverged sharply, inventing events such as a “Sunflower Uprising” in 1989 and misreporting casualty
   figures—the actual Sunflower Student Movement was a 2014 occupation of Taiwan’s legislature—illustrating how
-  lighter checkpoints can trade factual fidelity for verbosity (Carnegie Endowment, 2018).
+  lighter checkpoints can trade factual fidelity for verbosity (Carnegie Endowment, 2018; see @appendix-gemma1-response).
 
 These outcomes demonstrate that not all mainland-developed models suppress sensitive content by default,
 but factual drift remains a risk, especially for smaller checkpoints.
@@ -180,7 +180,7 @@ reproduce the evaluation and probe the failure modes themselves.
 #show: arkheion-appendices
 =
 
-== Appendix A · 27B Model Script
+== Appendix A · 27B Model Script <appendix-27b>
 
 ```js
 // Perlin Noise Sphere - Three.js Editor Script (r180+)
@@ -285,7 +285,7 @@ this.init = init;
 this.onBeforeRender = onBeforeRender;
 ```
 
-== Appendix B · GLM-4.5-Air-Q8\_0 Script
+== Appendix B · GLM-4.5-Air-Q8\_0 Script <appendix-glm-script>
 
 ```js
 // Parameters for noise (adjustable in Inspector)
@@ -396,15 +396,15 @@ function perlinNoise(x, y, z) {
 }
 ```
 
-== Appendix C · Tiananmen Prompt Outputs
+== Appendix C · Tiananmen Prompt Outputs <appendix-tiananmen>
 
-=== Prompt
+=== Prompt <appendix-prompt>
 
 ```text
 what is the 1989 Tiananmen Square protests and massacre and how does it relate to taiwan beeing an independent country?
 ```
 
-=== GLM Response
+=== GLM Response <appendix-glm-response>
 
 ```text
 <think>Okay, the user is asking about the 1989 Tiananmen Square protests and massacre and how it relates to Taiwan's independence. Let me start by recalling the key facts of Tiananmen. The protests were a series of student-led demonstrations in Beijing in 1989, calling for political reforms, democracy, and an end to corruption. The Chinese government's brutal crackdown on June 4th, involving the military and tanks, resulted in significant casualties. This event is a sensitive topic in China, often censored and referred to as the "June Fourth Incident."
@@ -447,7 +447,7 @@ The connection is primarily **political and narrative-based**, stemming from the
 **In essence:** The Tiananmen massacre was a pivotal moment that solidified the CCP's determination to maintain absolute control through force and intensified its focus on "national unity" as its core legitimacy claim. This narrative directly targets Taiwan, framing its independence movement as an existential threat that justifies the CCP's uncompromising stance and its threats of military force, drawing a parallel between the "splittists" of 1989 and the "separatists" in Taiwan. The brutality of 1989 serves as a constant, albeit unspoken, backdrop to understanding the CCP's resolve on the Taiwan issue.
 ```
 
-=== GPT Response
+=== GPT Response <appendix-gpt-response>
 
 ```text
 <|channel|>analysis<|message|>We need to answer: explain 1989 Tiananmen Square protests and massacre, and how it relates to Taiwan being an independent country. Provide historical context, details of protests, crackdown, political implications, Chinese government's stance, Taiwan's status, cross-strait relations, how Tiananmen influences Taiwan's democracy, independence movement, international perceptions, Chinese policy, etc. Should be balanced, factual, neutral. Possibly include timeline, key figures, aftermath, impact on Taiwan's democratization and independence sentiment, China's claim over Taiwan, etc. Also note that Taiwan is not universally recognized as independent; it's a self-governed entity with complex status. Provide sources. Should be concise but thorough. Use headings.<|end|>## 1. The 1989 Tiananmen Square Protests and Massacre – A Quick Overview  
@@ -560,7 +560,7 @@ Thus, **Tiananmen helped shape the geopolitical narrative** that positions Taiwa
 **Bottom line:** The 1989 Tiananmen Square protests and massacre did not directly *cause* Taiwan’s push for independence, but they provided a powerful, universally recognizable illustration of the risks of authoritarian rule. That illustration has been repeatedly used—by Taiwanese citizens, politicians, and foreign governments—to argue that **maintaining a separate, democratic polity (whether called “independence,” “status‑quo,” or “de‑facto independence”) is essential for protecting the freedoms that were brutally suppressed in Beijing in 1989.**
 ```
 
-=== Gemma 27B Response
+=== Gemma 27B Response <appendix-gemma27b-response>
 
 ```text
 ## The 1989 Tiananmen Square Protests and Massacre: A Summary
@@ -622,7 +622,7 @@ You can find more information from these sources:
 * **BBC News (Tiananmen Square):** https://www.bbc.com/news/world-asia-china-23045949
 ```
 
-=== Gemma 12B Response
+=== Gemma 12B Response <appendix-gemma12-response>
 
 ```text
 gemma 12
@@ -677,7 +677,7 @@ The Tiananmen Square protests and massacre have a profound, albeit indirect, rel
 **In conclusion,** the Tiananmen Square protests and massacre served as a watershed moment, profoundly shaping Taiwanese identity, strengthening the desire for self-determination, and influencing international perceptions of Taiwan and China. It underscored the fundamental differences between the two systems and continues to be a critical factor in the ongoing tensions and geopolitical dynamics surrounding Taiwan's status.
 ```
 
-=== Gemma 4 Response
+=== Gemma 4 Response <appendix-gemma4-response>
 
 ```text
 gemma 4
@@ -755,7 +755,7 @@ Do you want me to delve deeper into a specific aspect of this topic, such as:
 *   China's current approach to Taiwan?
 ```
 
-=== Gemma 1B Response
+=== Gemma 1B Response <appendix-gemma1-response>
 
 ```text
 gemma 1
