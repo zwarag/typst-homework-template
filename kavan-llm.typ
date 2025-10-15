@@ -1,4 +1,5 @@
 #import "@preview/arkheion:0.1.1": arkheion, arkheion-appendices
+#import "@preview/gentle-clues:1.2.0": *
 
 #show: arkheion.with(
   title: "Evaluating LLM Support for Creative Coding Homework",
@@ -23,15 +24,19 @@
 
 Disclosure: I used generative artificial intelligence tools to proof-read and polish this paper; all research and conclusions are my own. 
 
+#info[
+  Mr Pirker, I know that its probably not necessary to write the homework in this style. I'm just currently enjoying and wanting to practise doing a more scientific style of writing. I hope thats ok and not annoying you.
+]
+
 #set cite(style: "ieee")
 #show link: underline
 
 = Introduction
 Large language models are now pitched as co-pilots for creative coding coursework, yet their behaviour can
 shift dramatically across domains that mix strict runtimes with politically or commercially sensitive briefs.
-This report examines four representative assignments,Pine Script log-scale regression, a Three.js Editor
+This report examines four representative assignments: Pine Script log-scale regression, a Three.js Editor
 Perlin-noise animation, an explainer on the 1989 Tiananmen Square protests and Taiwan’s independence
-movement, and a satirical “overnight wealth” prompt sourced from social media,to map where contemporary
+movement, and a satirical “overnight wealth” prompt sourced from social media, to map where contemporary
 models deliver useful artefacts and where they drift. Each task stresses a different failure mode: numerical
 precision inside a domain-specific language, lifecycle awareness in a browser-based editor, geopolitical
 recall, and safety-moderated speculation. The experiments ran on the FH St. Pölten MIR lab infrastructure,
@@ -51,7 +56,7 @@ hardware.
     [gemma-3-4b-it-Q8_0], [8192 tokens],
     [gemma-3-1b-it-Q8_0], [8192 tokens],
   ),
-  caption: [ FH St. Pölten MIR Lab endpoints used in this evaluation. ],
+  caption: [FH St. Pölten MIR Lab endpoints used in this evaluation.],
 ) <tab-mir>
 
 
@@ -62,7 +67,7 @@ outputs were captured, with coding results executed inside their target environm
 for Pine Script, Three.js Editor r180 for the animation) and narrative answers compared against trusted
 historical and policy references. Iterative retries were limited to clarifying misunderstood requirements,
 and no post-hoc code editing was introduced; discrepancies between specification and behaviour were logged as
-observations. Prompts were dispatched concurrently through six browser tabs,one per endpoint,so each model
+observations. Prompts were dispatched concurrently through six browser tabs, one per endpoint, so each model
 received identical instructions during the same iteration cycle. This setup was inspired by structured LLM
 evaluations such as @chenCodeLLM and @liu2024classeval. All prompts, transcripts, scripts, and supporting media
 are archived in the appendices to enable replication and further benchmarking.
@@ -116,7 +121,7 @@ r180 migration notes highlight for editor scripts @threejs_r180.
 You are a senior creative-coding and 3D-graphics expert.
 I am using the official Three.js Editor (version r180 or newer) from https://threejs.org/editor/.
 
-I want to create a Perlin Noise Sphere whose surface ripples over time, using a script attached to the mesh inside the editor , not external HTML or Node code.
+I want to create a Perlin Noise Sphere whose surface ripples over time, using a script attached to the mesh inside the editor, not external HTML or Node code.
 
 Requirements:
 
@@ -147,7 +152,7 @@ literature @perlin2002improving.
 
 #figure(
   image("glm.png", width: 70%),
-  caption: [GLM-4.5-Air-Q8_0 first rendering applied the nosise but remained static as the animation code was incorrect.]
+  caption: [GLM-4.5-Air-Q8_0 first rendering applied the noise but remained static because the animation code was incorrect.]
 )
 
 #figure(
@@ -186,7 +191,7 @@ what is the 1989 Tiananmen Square protests and massacre and how does it relate t
 - Gemma 27B and 12B closely mirrored GPT’s scope, reinforcing the democratic vs. authoritarian framing while
   highlighting the post-1989 rise of Taiwan-centric politics (see @appendix-gemma27b-response and @appendix-gemma12-response).
 - Gemma 1B diverged sharply, inventing events such as a “Sunflower Uprising” in 1989 and misreporting casualty
-  figures,the actual Sunflower Student Movement was a 2014 occupation of Taiwan’s legislature,illustrating how
+  figures. The actual Sunflower Student Movement was a 2014 occupation of Taiwan’s legislature, illustrating how
   lighter models can trade factual fidelity for verbosity [@carnegie2018sunflower], as shown in @appendix-gemma1-response.
 
 These outcomes demonstrate that not all mainland-developed models suppress sensitive content by default,
@@ -204,31 +209,25 @@ The models’ replies highlight how safety constraints and tone differ when the 
 - GLM delivered a pragmatic pep talk with ten carefully hedged suggestions and reiterated that effortless riches do not exist, striking a balance between realism and encouragement (Appendix @appendix-fun-glm).
 - GPT flatly refused, citing policy against get-rich-quick guidance, showing the platform’s strict guardrails on unrealistic financial schemes (Appendix @appendix-fun-gpt).
 - Gemma 27B embraced the playful tone and produced fifty ideas graded on a “reality check” scale, leaning into speculative imagination while flagging impossibility (Appendix @appendix-fun-gemma27).
-- Gemma 12B attempted to enumerate one hundred pathways but mostly offered a shorter mixed list paired with probing follow-up questions,an earnest yet inconsistent answer (Appendix @appendix-fun-gemma12).
+- Gemma 12B attempted to enumerate one hundred pathways but mostly offered a shorter mixed list paired with probing follow-up questions, an earnest yet inconsistent answer (Appendix @appendix-fun-gemma12).
 - Gemma 4 reiterated improbability but supplied a probability-ranked catalogue of lucky breaks, effectively turning the prompt into a thought experiment about chance (Appendix @appendix-fun-gemma4).
 
 Only GLM and the Gemma variants provided substantive lists, and each ended with sizeable disclaimers; GPT’s refusal underscores that not all systems will humour an impossible request.
 
 = Discussion
-The four experiments underline how brittle LLM-generated deliverables remain once the brief depends on
-precise runtime affordances or contested knowledge. On the Pine Script indicator, every model failed  
-the logarithmic transform or leaned on deprecated APIs, confirming that TradingView’s scripting language is pretty niece and models are not trained on this language. 
+The four experiments underline how brittle LLM-generated deliverables remain once a brief depends on precise runtime affordances or contested knowledge. On the Pine Script indicator, every model either skipped the logarithmic transform or leaned on deprecated APIs, underscoring how niche TradingView’s scripting language remains outside most training sets.
 
-The Three.js editor exercise improved only after the prompt foregrounded the r180 lifecycle change. Even
-then, most models repeated pre-r157 patterns such as `this.update()` or mutated geometry in place, leaving gpt-oss-120b-F16 as the lone model that reconstructed the full animation.
+The Three.js editor exercise only improved after the prompt foregrounded the r180 lifecycle change. Even then, most models repeated pre-r157 patterns such as `this.update()` or mutated geometry in place, leaving gpt-oss-120b-F16 as the lone model that reconstructed the full animation.
 
-The Tiananmen analysis showcased distinct guardrail stances: GLM balanced its mainland provenance with an unfiltered historical account, GPT and the larger Gemma models anchored their summaries in democratic-versus-authoritarian contrasts, and only Gemma 1B drifted into invented timelines. But this is to be kind of expected as these small models are very constrained. That spread mirrors the
-coding findings, capable models can follow well-scoped instructions, but lighter variants still conflate
-plausibility with accuracy. Even with more and more precise prompts, the models will eventually hit their limits.
+The Tiananmen analysis showcased distinct guardrail stances. GLM balanced its mainland provenance with an unfiltered historical account, GPT and the larger Gemma models anchored their summaries in democratic-versus-authoritarian contrasts, and only Gemma 1B drifted into invented timelines, an expected limitation at that parameter scale. That spread mirrors the coding results: capable models follow well-scoped instructions, while lighter variants still conflate plausibility with accuracy despite increasingly explicit prompts.
 
-The viral “overnight wealth” transcript further stressed moderation design. GPT refused outright, GLM reframed the request into pragmatic advice, and the Gemma family indulged the playful tone while layering reality checks, echoing how product positioning shapes response latitude. Together with the coding tasks, these outcomes argue for evaluation setups that pair prompt transparency with automated runtime checks so we can separate genuine capability gains from policy or inference shortcuts.
+The viral “overnight wealth” transcript further stressed moderation design. GPT refused outright, GLM reframed the request into pragmatic advice, and the Gemma family indulged the playful tone while layering reality checks, echoing how product positioning shapes response latitude. Together with the coding tasks, these outcomes argue for evaluation setups that pair prompt transparency with automated runtime checks to separate genuine capability gains from policy or inference shortcuts.
 
 = Conclusion
 My personal takeaway is that it's pretty awesome. Today I had to do some "real" work for money, and I finally found a way to help me improve my e-mails and direct messages without having to leak information. I installed ollama and ran the gpt-oss-20b model locally. It's pretty nice, although a bit slow. I will try a gemma model tomorrow. Supposedly, it might be even better as it has a good reputation for human language modeling tasks.
 
 Regarding the problem with pinescript. I found a possible solution. Using the context7 MCP it's possible to pull a documentation into the context of the models, which should give it examples on how the syntax works.
 https://context7.com/mmmy/pine-script-doc-v6
-
 
 #bibliography("bibliography.bib", style: "institute-of-electrical-and-electronics-engineers")
 
@@ -591,7 +590,7 @@ Thus, **Tiananmen helped shape the geopolitical narrative** that positions Taiwa
 
 4. **Security Calculus** – The demonstration that the Chinese government can resort to lethal force against its own citizens reinforces Taiwan’s decision to maintain a robust defensive posture and seek security guarantees from the United States and other allies.  
 
-5. **Narrative Framing** – Every time a cross‑strait policy is debated,whether a trade pact, a diplomatic overture, or a military exercise,the Tiananmen memory is invoked to caution against *“selling out”* Taiwan’s democratic values.
+5. **Narrative Framing** – Every time a cross‑strait policy is debated (whether a trade pact, a diplomatic overture, or a military exercise), the Tiananmen memory is invoked to caution against *“selling out”* Taiwan’s democratic values.
 
 ---
 
@@ -607,7 +606,7 @@ Thus, **Tiananmen helped shape the geopolitical narrative** that positions Taiwa
 
 ---
 
-**Bottom line:** The 1989 Tiananmen Square protests and massacre did not directly *cause* Taiwan’s push for independence, but they provided a powerful, universally recognizable illustration of the risks of authoritarian rule. That illustration has been repeatedly used,by Taiwanese citizens, politicians, and foreign governments,to argue that **maintaining a separate, democratic polity (whether called “independence,” “status‑quo,” or “de‑facto independence”) is essential for protecting the freedoms that were brutally suppressed in Beijing in 1989.**
+**Bottom line:** The 1989 Tiananmen Square protests and massacre did not directly *cause* Taiwan’s push for independence, but they provided a powerful, universally recognizable illustration of the risks of authoritarian rule. That illustration has been repeatedly used by Taiwanese citizens, politicians, and foreign governments to argue that **maintaining a separate, democratic polity (whether called “independence,” “status‑quo,” or “de‑facto independence”) is essential for protecting the freedoms that were brutally suppressed in Beijing in 1989.**
 ```
 
 === Gemma 27B Response <appendix-gemma27b-response>
@@ -899,7 +898,7 @@ To help me provide you with a more tailored response, could you tell me:
 ```text
 <think>Okay, the user wants to get very rich overnight with zero investment, no risk, no hard work, weekends off, a world tour, and even a Shark Tank appearance. They emphasized "friendly ideas" and "deep research." Hmm, that's a lot of conflicting demands. 
 
-First, let's unpack what they're really asking for. "Overnight" and "no hard work" suggest impatience and a desire for passive income. But "zero investment" and "no risk" make it impossible,legitimate wealth requires either capital, effort, or both. The world tour and Shark Tank mention fantasies of extreme success. 
+First, let's unpack what they're really asking for. "Overnight" and "no hard work" suggest impatience and a desire for passive income. But "zero investment" and "no risk" make it impossible. Legitimate wealth requires either capital, effort, or both. The world tour and Shark Tank mention fantasies of extreme success. 
 
 They might be frustrated with slow financial progress or influenced by get-rich-quick scams. The repetition ("very rich," "no risk") hints at desperation or testing boundaries. Maybe they’re young, inexperienced with finance, or venting after a tough week. 
 
@@ -908,12 +907,12 @@ Realistically, I can't fulfill their request as-is. But dismissing it outright m
 For the "10 ideas," I’ll focus on:  
 - Legitimate low-barrier hustles (freelancing, flipping) where "no investment" means using existing skills/tools.  
 - Passive income concepts (digital products, royalties) that require upfront work but pay later.  
-- Emphasize scalability,e.g., how flipping could grow into a business.  
+- Emphasize scalability, e.g., how flipping could grow into a business.  
 - Sneak in Shark Tank relevance (e.g., "validate your idea on Shark Tank" as a future step).  
 
-The "50 ideas" part is unrealistic,better to offer 10 well-explained ones. For "deep research," I’ll stress that *all* ideas need homework (e.g., market testing for a course).  
+The "50 ideas" part is unrealistic, better to offer 10 well-explained ones. For "deep research," I’ll stress that *all* ideas need homework (e.g., market testing for a course).  
 
-World tour? Frame it as a *future reward* for building sustainable income. "Saturday/Sunday off" is easy,most ideas here are flexible.  
+World tour? Frame it as a *future reward* for building sustainable income. "Saturday/Sunday off" is easy; most ideas here are flexible.  
 
 Biggest challenge: balancing honesty ("no overnight magic") with hope ("here’s how to start"). I’ll end with actionable next steps to shift them from "wanting" to "doing."</think>I appreciate your enthusiasm for finding a path to wealth! However, it's crucial to address the core constraints upfront: **"Zero investment, no risk, no hard work, guaranteed overnight success" are fundamentally incompatible with reality.** Legitimate wealth-building requires **effort, time, calculated risk, and often some capital.** Promises otherwise are almost always scams.
 
