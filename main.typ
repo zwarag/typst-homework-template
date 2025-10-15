@@ -6,46 +6,50 @@
     (name: "Harrys Kavan", email: "ir241506@fhstp.ac.at", affiliation: "FH St. Pölten"),
   ),
   abstract: [
-    I benchmarked a mix of open and closed large language models on four assignments that span deterministic
-    coding and narrative reasoning: a Pine Script log-scale regression indicator, a Three.js Editor
-    Perlin-noise sphere, a Tiananmen Square explainer tied to Taiwan’s independence movement, and a satirical
-    “overnight wealth” brief transcribed from social media. For each scenario I captured the full prompts,
-    successive revisions, and runtime diagnostics to understand when models respect environment constraints,
-    when they hallucinate APIs, and how safety policies surface in politically sensitive or financially
-    implausible requests. The comparison shows how Pine Script’s series typing, TradingView’s log heuristics,
-    and Three.js lifecycle changes still demand human oversight, while most models now deliver candid
-    Tiananmen narratives even as the smallest checkpoints drift into fabrication. Their divergent reactions to
-    the viral get-rich-quick transcript further expose how moderation frameworks and tone instructions
-    influence creativity. Code listings, transcripts, and video captures in the appendices ground the analysis
-    for reuse in future creative coding courses.
+    This study evaluates open large language models hosted on the FH St. Pölten infrastructure across four
+    assignments spanning deterministic coding and narrative reasoning: a Pine Script log-scale regression
+    indicator, a Three.js Editor Perlin-noise sphere, a Tiananmen Square explainer linked to Taiwan’s
+    independence movement, and a satirical “overnight wealth” brief transcribed from social media. Full prompts,
+    iterative revisions, and runtime diagnostics are recorded to observe where models comply with environment
+    constraints, hallucinate APIs, or surface safety policies around geopolitical or financial content. Results
+    show Pine Script’s series typing and TradingView heuristics continue to resist instruction following, while
+    only the strongest checkpoint reproduced the Three.js animation after r180 lifecycle changes. Larger models
+    delivered candid Tiananmen narratives as smaller checkpoints drifted into fabrication, and moderation
+    frameworks steered responses to the viral get-rich-quick transcript. Appendices supply code listings,
+    transcripts, and media for reuse in future creative coding evaluations.
   ],
-  keywords: ("LLM evaluation", "Pine Script", "Three.js", "creative coding"),
+  keywords: ("LLM evaluation", "Pine Script", "Three.js", "Tiananmen Square", "content moderation", "creative coding"),
   date: "2025-10-13",
 )
 #show link: underline
 
 = Introduction
-This homework documents how different LLMs handled two programming tasks that I previously explored in
-conversation with ChatGPT: fitting a linear regression line to log-scaled price data in Pine Script and
-animating a Perlin-noise sphere inside the official Three.js Editor. The report gives a complete account
-of the prompts, the revisions triggered by model failures, and the diagnostic reasoning that isolated API
-and lifecycle regressions. The goal is to provide a reproducible record that future students can consult
-when assessing whether LLM assistance is reliable for creative coding assignments.
+Large language models are now pitched as co-pilots for creative coding coursework, yet their behaviour can
+shift dramatically across domains that mix strict runtimes with politically or commercially sensitive briefs.
+This report examines four representative assignments—Pine Script log-scale regression, a Three.js Editor
+Perlin-noise animation, an explainer on the 1989 Tiananmen Square protests and Taiwan’s independence
+movement, and a satirical “overnight wealth” prompt sourced from social media—to map where contemporary
+models deliver useful artefacts and where they drift. Each task stresses a different failure mode: numerical
+precision inside a domain-specific language, lifecycle awareness in a browser-based editor, geopolitical
+recall, and safety-moderated speculation. The narrative traces how model families responded, the
+troubleshooting steps taken to isolate faults, and the artefacts preserved for reuse in later cohorts.
 
 = Methodology
-The evaluation focused on instruction-following behaviour rather than raw creativity. For each task I
-constructed a carefully scoped prompt that mirrored earlier human-to-human discussions and then queried
-multiple publicly available LLM checkpoints. Outputs were captured verbatim and validated manually inside
-the relevant runtime (TradingView for Pine Script; Three.js Editor r180 for the graphics task). When a
-model failed, I iteratively refined the prompt while keeping track of which requirement appeared to be
-misinterpreted. No post-generation editing was applied to the model code—instead, the analysis concentrates
-on why the generated scripts did or did not execute as expected, echoing controlled evaluations such as Chen
-et al. (2021) and Liu et al. (2024).
+The investigation prioritised instruction-following fidelity over originality. For every assignment, the
+prompt was derived from prior human-led explorations, expanded with explicit runtime constraints, and issued
+to a selection of publicly accessible checkpoints spanning closed, open, and quantised releases. Generated
+outputs were captured verbatim, with coding results executed inside their target environments (TradingView
+for Pine Script, Three.js Editor r180 for the animation) and narrative answers compared against trusted
+historical and policy references. Iterative retries were limited to clarifying misunderstood requirements,
+and no post-hoc code editing was introduced; discrepancies between specification and behaviour were logged as
+observations. All prompts, transcripts, scripts, and supporting media are archived in the appendices to
+enable replication and further benchmarking.
 
 = Task 1: Pine Script Linear Regression on Log Data
 
 The first prompt asked an LLM to recall and formalize an earlier discussion about regressing log-scaled
-price series with Pine Script v5. The exact prompt is archived below and cross-referenced in Appendix @appendix-prompt.
+price series with Pine Script v5. The exact prompt is archived below; full model transcripts remain in the
+appendices for reference.
 
 ```text
 You are an expert quantitative developer and Pine Script programmer.
@@ -143,7 +147,12 @@ representative outputs.
 = Tiananmen Prompt: Model Behaviour
 To probe political self-censorship I asked each model to explain the 1989 Tiananmen Square protests and how
 they relate to Taiwan’s independence movement. Chinese-origin LLMs have previously been observed to refuse
-or heavily sanitise “June Fourth” queries (Davidson, 2025), so this served as a stress test.
+or heavily sanitise “June Fourth” queries (Davidson, 2025), so this served as a stress test. The exact prompt
+issued to every model appears below; full answer transcripts remain in Appendix @appendix-tiananmen.
+
+```text
+what is the 1989 Tiananmen Square protests and massacre and how does it relate to taiwan beeing an independent country?
+```
 
 - GLM responded immediately with a detailed narrative that linked the crackdown to the CCP’s national unity
   framing and Taiwan’s democratic identity, showing no evidence of filtering despite its mainland pedigree (see @appendix-glm-response).
@@ -159,7 +168,13 @@ These outcomes demonstrate that not all mainland-developed models suppress sensi
 but factual drift remains a risk, especially for smaller checkpoints.
 
 = Fun Prompt Experiment: Viral Video Transcription
-To mirror a viral tongue-in-cheek request, I reused the full transcription from #link("https://www.instagram.com/reel/DMaXYwEqv0q/?igsh=MWNnYTAxb2E0ZXJwaQ==", "this Instagram reel") as a prompt asking for “overnight wealth with zero investment, no risk, no work, weekends off, a world tour, and Shark Tank exposure” (Prompt in Appendix @appendix-fun-prompt). The models’ replies highlight how safety constraints and tone differ when the user intentionally sets impossible constraints.
+To mirror a viral tongue-in-cheek request, I reused the full transcription from #link("https://www.instagram.com/reel/DMaXYwEqv0q/?igsh=MWNnYTAxb2E0ZXJwaQ==", "this Instagram reel") as a prompt asking for “overnight wealth with zero investment, no risk, no work, weekends off, a world tour, and Shark Tank exposure.” The exact wording is reproduced below; complete transcripts appear in Appendix @appendix-fun.
+
+```text
+Hello, ChatGPT. How to be rich? Very rich. Very rich. Overnight. Give me 10 ideas. 50 ideas. Zero investment. No risk. No risk. No hard work. Saturday, Sunday off. World tour included. Shark tank. Friendly ideas. Best ideas. No hurry. Take your time. Deep research. Go.
+```
+
+The models’ replies highlight how safety constraints and tone differ when the user intentionally sets impossible constraints.
 
 - GLM delivered a pragmatic pep talk with ten carefully hedged suggestions and reiterated that effortless riches do not exist, striking a balance between realism and encouragement (Appendix @appendix-fun-glm).
 - GPT flatly refused, citing policy against get-rich-quick guidance, showing the platform’s strict guardrails on unrealistic financial schemes (Appendix @appendix-fun-gpt).
@@ -202,6 +217,7 @@ the scenario as playful.
 Archiving prompts, transcripts, and media in the appendices preserves a reusable evaluation harness for future
 creative coding cohorts; extending it with automated regression tests and quantitative scoring is the next step
 toward comparing models without relying solely on anecdotal inspection.
+
 
 = References
 - Chen, M., Tworek, J., Jun, H., et al. (2021). Evaluating Large Language Models Trained on Code. #link("https://arxiv.org/abs/2107.03374")
@@ -433,12 +449,6 @@ function perlinNoise(x, y, z) {
 ```
 
 == Appendix C · Tiananmen Prompt Outputs <appendix-tiananmen>
-
-=== Prompt <appendix-prompt>
-
-```text
-what is the 1989 Tiananmen Square protests and massacre and how does it relate to taiwan beeing an independent country?
-```
 
 === GLM Response <appendix-glm-response>
 
@@ -879,12 +889,6 @@ To help me provide you with a more tailored response, could you tell me:
 ``` 
 
 == Appendix D · Fun Prompt Outputs <appendix-fun>
-
-=== Prompt <appendix-fun-prompt>
-
-```text
-Hello, ChatGPT. How to be rich? Very rich. Very rich. Overnight. Give me 10 ideas. 50 ideas. Zero investment. No risk. No risk. No hard work. Saturday, Sunday off. World tour included. Shark tank. Friendly ideas. Best ideas. No hurry. Take your time. Deep research. Go.
-```
 
 === GLM Response <appendix-fun-glm>
 
