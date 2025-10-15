@@ -30,8 +30,28 @@ Perlin-noise animation, an explainer on the 1989 Tiananmen Square protests and T
 movement, and a satirical “overnight wealth” prompt sourced from social media—to map where contemporary
 models deliver useful artefacts and where they drift. Each task stresses a different failure mode: numerical
 precision inside a domain-specific language, lifecycle awareness in a browser-based editor, geopolitical
-recall, and safety-moderated speculation. The narrative traces how model families responded, the
-troubleshooting steps taken to isolate faults, and the artefacts preserved for reuse in later cohorts.
+recall, and safety-moderated speculation. The experiments ran on the FH St. Pölten MIR lab infrastructure,
+which exposes six quantised checkpoints via dedicated API ports (Table @tab-mir). After some initial
+lab-access hurdles, Dr. Martin Pirker helped finalise credentials so the study could proceed on that shared
+hardware.
+
+#figure(
+  table(
+    columns: 4,
+    inset: 6pt,
+    stroke: none,
+  )[
+    [strong("Model")], [strong("Context window")],
+
+    ["GLM-4.5-Air-Q8_0"], ["32768 tokens"],
+    ["gpt-oss-120b-F16"], ["16384 tokens"],
+    ["gemma-3-27b-it-Q8_0"], ["16384 tokens"],
+    ["gemma-3-12b-it-Q8_0"], ["8192 tokens"],
+    ["gemma-3-4b-it-Q8_0"], ["8192 tokens"],
+    ["gemma-3-1b-it-Q8_0"], ["8192 tokens"],
+  ],
+  caption: [FH St. Pölten MIR lab endpoints used in this evaluation.],
+) <tab-mir>
 
 = Methodology
 The investigation prioritised instruction-following fidelity over originality. For every assignment, the
@@ -41,9 +61,10 @@ outputs were captured verbatim, with coding results executed inside their target
 for Pine Script, Three.js Editor r180 for the animation) and narrative answers compared against trusted
 historical and policy references. Iterative retries were limited to clarifying misunderstood requirements,
 and no post-hoc code editing was introduced; discrepancies between specification and behaviour were logged as
-observations. This setup mirrors structured LLM evaluations such as @chenCodeLLM and @liu2024classeval.
-All prompts, transcripts, scripts, and supporting media are archived in the appendices to
-enable replication and further benchmarking.
+observations. Prompts were dispatched concurrently through six browser tabs—one per endpoint—so each model
+received identical instructions during the same iteration cycle. This setup was inspired by structured LLM
+evaluations such as @chenCodeLLM and @liu2024classeval. All prompts, transcripts, scripts, and supporting media
+are archived in the appendices to enable replication and further benchmarking.
 
 = Task 1: Pine Script Linear Regression on Log Data
 
