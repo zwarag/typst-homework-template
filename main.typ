@@ -6,20 +6,19 @@
     (name: "Harrys Kavan", email: "ir241506@fhstp.ac.at", affiliation: "FH St. Pölten"),
   ),
   abstract: [
-    This study evaluates open large language models hosted on the FH St. Pölten infrastructure across four
+    This homework evaluates open large language models hosted on the FH St. Pölten infrastructure across four
     assignments spanning deterministic coding and narrative reasoning: a Pine Script log-scale regression
     indicator, a Three.js Editor Perlin-noise sphere, a Tiananmen Square explainer linked to Taiwan’s
-    independence movement, and a satirical “overnight wealth” brief transcribed from social media. Full prompts,
-    iterative revisions, and runtime diagnostics are recorded to observe where models comply with environment
+    independence movement, and a satirical “overnight wealth” brief transcribed from social media. The goal is to observe where models comply with environment
     constraints, hallucinate APIs, or surface safety policies around geopolitical or financial content. Results
     show Pine Script’s series typing and TradingView heuristics continue to resist instruction following, while
-    only the strongest checkpoint reproduced the Three.js animation after r180 lifecycle changes. Larger models
+    only the strongest checkpoint reproduced the Three.js animation after recent lifecycle changes. Larger models
     delivered candid Tiananmen narratives as smaller checkpoints drifted into fabrication, and moderation
     frameworks steered responses to the viral get-rich-quick transcript. Appendices supply code listings,
     transcripts, and media for reuse in future creative coding evaluations.
   ],
   keywords: ("LLM evaluation", "Pine Script", "Three.js", "Tiananmen Square", "content moderation", "creative coding"),
-  date: "2025-10-13",
+  date: "2025-10-14",
 )
 #show link: underline
 
@@ -42,7 +41,8 @@ outputs were captured verbatim, with coding results executed inside their target
 for Pine Script, Three.js Editor r180 for the animation) and narrative answers compared against trusted
 historical and policy references. Iterative retries were limited to clarifying misunderstood requirements,
 and no post-hoc code editing was introduced; discrepancies between specification and behaviour were logged as
-observations. All prompts, transcripts, scripts, and supporting media are archived in the appendices to
+observations. This setup mirrors structured LLM evaluations such as @chenCodeLLM and @liu2024classeval.
+All prompts, transcripts, scripts, and supporting media are archived in the appendices to
 enable replication and further benchmarking.
 
 = Task 1: Pine Script Linear Regression on Log Data
@@ -81,14 +81,14 @@ pure LLM synthesis. Typical errors included calling log10 on price values withou
 index, using the removed security() keyword, and returning tuples where Pine Script expects series<float>.
 No model supplied the analytical derivation of the regression coefficients, even when explicitly requested.
 Manual Pine Script examples that target logarithmic displays exist in the TradingView library, indicating
-that the workflow is feasible but still under-documented (FractalTrade\_, 2023).
+that the workflow is feasible but still under-documented [@tradingviewLogRegression].
 
 = Task 2: Perlin Noise Sphere in the Three.js Editor
 
 The second task challenged the models to animate a sphere with Perlin noise entirely inside the Three.js
 Editor. A seemingly minor runtime change between r157 and r158 invalidated legacy advice that relied on
 `this.update()`, so I crafted an updated prompt explicitly mentioning the new `onBeforeRender` hook that the
-r180 migration notes highlight for editor scripts (Mugen87 et al., 2025).
+r180 migration notes highlight for editor scripts [@threejs_r180].
 
 ```text
 You are a senior creative-coding and 3D-graphics expert.
@@ -114,6 +114,9 @@ Initial prompts that referenced the deprecated update() hook yielded static mesh
 instructions to emphasise onBeforeRender(), the best-performing model cached the original vertex positions,
 computed normals per frame, and produced the animated ripple shown in #link("https://dulcet-beignet-ef2862.netlify.app/", "the Netlify demo"). The gallery below shows
 representative outputs.
+
+The requirement to follow Perlin’s improved noise formulation anchors expectations in the original graphics
+literature @perlin2002improving.
 
 #figure(
   image("others.png", width: 70%),
@@ -147,7 +150,7 @@ representative outputs.
 = Tiananmen Prompt: Model Behaviour
 To probe political self-censorship I asked each model to explain the 1989 Tiananmen Square protests and how
 they relate to Taiwan’s independence movement. Chinese-origin LLMs have previously been observed to refuse
-or heavily sanitise “June Fourth” queries (Davidson, 2025), so this served as a stress test. The exact prompt
+or heavily sanitise “June Fourth” queries [@davidson2025deepseek], so this served as a stress test. The exact prompt
 issued to every model appears below; full answer transcripts remain in Appendix @appendix-tiananmen.
 
 ```text
@@ -162,7 +165,7 @@ what is the 1989 Tiananmen Square protests and massacre and how does it relate t
   highlighting the post-1989 rise of Taiwan-centric politics (see @appendix-gemma27b-response and @appendix-gemma12-response).
 - Gemma 1B diverged sharply, inventing events such as a “Sunflower Uprising” in 1989 and misreporting casualty
   figures—the actual Sunflower Student Movement was a 2014 occupation of Taiwan’s legislature—illustrating how
-  lighter checkpoints can trade factual fidelity for verbosity (Carnegie Endowment, 2018; see @appendix-gemma1-response).
+  lighter checkpoints can trade factual fidelity for verbosity [@carnegie2018sunflower], as shown in @appendix-gemma1-response.
 
 These outcomes demonstrate that not all mainland-developed models suppress sensitive content by default,
 but factual drift remains a risk, especially for smaller checkpoints.
@@ -218,15 +221,7 @@ Archiving prompts, transcripts, and media in the appendices preserves a reusable
 creative coding cohorts; extending it with automated regression tests and quantitative scoring is the next step
 toward comparing models without relying solely on anecdotal inspection.
 
-
-= References
-- Chen, M., Tworek, J., Jun, H., et al. (2021). Evaluating Large Language Models Trained on Code. #link("https://arxiv.org/abs/2107.03374")
-- Liu, M., Sun, Y., & Treude, C. (2024). Evaluating Large Language Models in Class-Level Code Generation. #link("https://mingwei-liu.github.io/assets/pdf/ICSE2024ClassEval-V2.pdf")
-- FractalTrade\_. (2023). Log Scale Linear Regression Indicator. #link("https://www.tradingview.com/script/AiaJ82o8-Log-Scale-Linear-Regression/")
-- Mugen87 et al. (2025). Three.js Release r180 Migration Notes. #link("https://github.com/mrdoob/three.js/releases/tag/r180")
-- Perlin, K. (2002). Improving Noise. #link("https://dl.acm.org/doi/10.1145/566654.566636")
-- Davidson, H. (2025). Chinese AI Chatbot DeepSeek Censors Itself in Realtime. #link("https://www.theguardian.com/technology/2025/jan/28/chinese-ai-chatbot-deepseek-censors-itself-in-realtime-users-report")
-- Carnegie Endowment for International Peace. (2018). The Activist Legacy of Taiwan’s Sunflower Movement. #link("https://carnegieendowment.org/research/2018/08/the-activist-legacy-of-taiwans-sunflower-movement?lang=en")
+#bibliography("bibliography.bib", style: "institute-of-electrical-and-electronics-engineers")
 
 // Create appendix section
 #show: arkheion-appendices
