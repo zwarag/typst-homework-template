@@ -13,7 +13,7 @@
 )
 
 Disclosure: I used generative artificial intelligence tools to proof-read and polish this paper; all research and conclusions are my own.
-#set cite(style: "american-psychological-association")
+#set cite(style: "ieee")
 #show link: underline
 
 = Introduction
