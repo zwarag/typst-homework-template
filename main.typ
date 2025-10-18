@@ -12,6 +12,8 @@
   date: "2025-10-07",
 )
 
+Disclosure: I used generative artificial intelligence tools to proof-read and polish this paper; all research and conclusions are my own.
+
 #show link: underline
 #set cite(style: "ieee")
 
@@ -22,18 +24,9 @@ Artificial intelligence has long been expected to ease the burden of clinical do
 
 The project examines everyday documentation tasks, in which therapists record short notes after or during each session. These notes help structure treatment, preserve continuity, and communicate with colleagues. The research question is simple but crucial: can an AI system produce session summaries that psychologists judge to be sufficiently clear, accurate, and useful for clinical work? To answer this, the team designed a controlled yet ecologically valid evaluation procedure implemented directly at the clinic.
 
-#block(
-  fill: luma(235),
-  stroke: 0.5pt,
-  inset: 10pt,
-  radius: 6pt,
-  [
-    #strong["Study at a Glance"]
-    - Eight licensed clinical psychologists
-    - Target: ~300 sessions yielding ~520 ratings
-    - Three-block, two-hour evaluation visits
-    - Local, offline large language model deployment
-  ],
+#figure(
+  image("image.png", width: 80%),
+  caption: [Study timeline overview with key milestones from pilot setup to analysis wrap-up.]
 )
 
 == Study Design
