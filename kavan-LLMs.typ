@@ -33,16 +33,14 @@ Disclosure: I used generative artificial intelligence tools to proof-read and po
 
 = Introduction
 Large language models are now pitched as co-pilots for creative coding coursework, yet their behaviour can
-shift dramatically across domains that mix strict runtimes with politically or commercially sensitive briefs.
-This report examines four representative assignments: Pine Script log-scale regression, a Three.js Editor
-Perlin-noise animation, an explainer on the 1989 Tiananmen Square protests and Taiwan’s independence
-movement, and a satirical “overnight wealth” prompt sourced from social media, to map where contemporary
-models deliver useful artefacts and where they drift. Each task stresses a different failure mode: numerical
-precision inside a domain-specific language, lifecycle awareness in a browser-based editor, geopolitical
-recall, and safety-moderated speculation. The experiments ran on the FH St. Pölten MIR lab infrastructure,
-which exposes six quantised models via dedicated API ports (Table @tab-mir). After some initial
-lab-access hurdles, Dr. Martin Pirker helped finalise credentials so the study could proceed on that shared
-hardware.
+shift dramatically once prompts move beyond generic tutorials. Students regularly ask whether these systems
+can shoulder assessed work, how brittle they become when tooling drifts, and whether safety filters suppress
+candid analysis. This report tackles those questions by staging four previously circulated homework briefs
+that mix deterministic coding with politically and commercially sensitive writing. Rather than previewing the
+results, the introduction frames why these briefs were selected and what they reveal about instruction
+following under real assessment pressure. All experiments ran on the FH St. Pölten MIR lab infrastructure,
+which provides six quantised checkpoints via dedicated API ports (Table @tab-mir). The methodology that
+follows documents the prompting cadence, evaluation criteria, and replication materials.
 
 #figure(
   table(
@@ -61,16 +59,14 @@ hardware.
 
 
 = Methodology
-The investigation prioritised instruction-following fidelity over originality. For every assignment, the
-prompt was derived from prior human-led explorations. Generated
-outputs were captured, with coding results executed inside their target environments (TradingView
-for Pine Script, Three.js Editor r180 for the animation) and narrative answers compared against trusted
-historical and policy references. Iterative retries were limited to clarifying misunderstood requirements,
-and no post-hoc code editing was introduced; discrepancies between specification and behaviour were logged as
-observations. Prompts were dispatched concurrently through six browser tabs, one per endpoint, so each model
-received identical instructions during the same iteration cycle. This setup was inspired by structured LLM
-evaluations such as @chenCodeLLM and @liu2024classeval. All prompts, transcripts, scripts, and supporting media
-are archived in the appendices to enable replication and further benchmarking.
+The investigation prioritised instruction-following fidelity over originality. For each assignment, I
+refined earlier human-written prompts, then issued them concurrently through six browser tabs—one per MIR lab
+endpoint—so every checkpoint received the same task at the same time. Generated artefacts were executed or
+reviewed inside their intended environments (TradingView for Pine Script, Three.js Editor r180 for the
+animation, and curated reference sets for the narrative prompts). Iterative retries were restricted to
+clarifying misinterpretations, and no post-hoc code edits were applied; deviations from specification were
+recorded as findings. This workflow mirrors structured evaluation recipes such as @chenCodeLLM and
+@liu2024classeval. Complete prompts, transcripts, and media artefacts reside in the appendices for replication.
 
 = Task 1: Pine Script Linear Regression on Log Data
 
@@ -139,7 +135,7 @@ Requirements:
 This clarification made the difference: only models that understood the lifecycle change produced motion.
 Initial prompts that referenced the deprecated update() hook yielded static meshes. After rewriting the
 instructions to emphasise onBeforeRender(), the best-performing model cached the original vertex positions,
-computed normals per frame, and produced the animated ripple shown in #link("https://dulcet-beignet-ef2862.netlify.app/", "the Netlify demo"). The gallery below shows
+computed normals per frame, and produced the animated ripple. The gallery below shows
 representative outputs.
 
 The requirement to follow Perlin’s improved noise formulation anchors expectations in the original graphics
